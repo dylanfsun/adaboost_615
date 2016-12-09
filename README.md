@@ -2,7 +2,7 @@
 r package for biostat 615 adaboost project
 
 Instructions:
-install.packages("devtools")
-library(devtools)
-install_github(repo = "dylanfsun/adaboost_615")
-library(adaboost615)
+1. install.packages("devtools")
+2. library(devtools) 
+3. install_github(repo = "dylanfsun/adaboost_615")
+4. library(adaboost615)
