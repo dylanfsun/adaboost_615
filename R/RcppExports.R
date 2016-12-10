@@ -13,3 +13,7 @@ predictAda615 <- function(test, train_results) {
     .Call('adaboost615_predictAda615', PACKAGE = 'adaboost615', test, train_results)
 }
 
+errorRate <- function(predicted, label) {
+    .Call('adaboost615_errorRate', PACKAGE = 'adaboost615', predicted, label)
+}
+

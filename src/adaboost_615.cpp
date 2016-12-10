@@ -339,16 +339,17 @@ NumericVector predictAda615(NumericMatrix test, NumericMatrix train_results) {
 
 
 // error rate
-// [[Rcpp::export]] 
-double error_rate(NumericVector predicted, NumericVector label){
+// [[Rcpp::export]]
+double errorRate(NumericVector predicted, NumericVector label){
   if (predicted.size() != label.size()) {
     std::cout << "Error: size of predicted and label vectors do not match.";
     return 0;
   }
   double error=0;
-  for(int i=0;i<label.size();i++){
-   if(predicted[i]!=label[i])
-   error+=1;    
+  for(int i = 0;i < label.size(); i++) {
+    if (predicted[i] != label[i]) {
+      error += 1;
+    }
   }
-   return error/label.size();
+  return error/label.size();
 }

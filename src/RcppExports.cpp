@@ -42,3 +42,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// errorRate
+double errorRate(NumericVector predicted, NumericVector label);
+RcppExport SEXP adaboost615_errorRate(SEXP predictedSEXP, SEXP labelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type predicted(predictedSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type label(labelSEXP);
+    rcpp_result_gen = Rcpp::wrap(errorRate(predicted, label));
+    return rcpp_result_gen;
+END_RCPP
+}
