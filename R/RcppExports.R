@@ -13,7 +13,3 @@ predictAda615 <- function(test, train_results) {
     .Call('adaboost615_predictAda615', PACKAGE = 'adaboost615', test, train_results)
 }
 
-rcpp_hello <- function() {
-    .Call('adaboost615_rcpp_hello', PACKAGE = 'adaboost615')
-}
-
