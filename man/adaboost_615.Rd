@@ -68,7 +68,27 @@ errorRate(pred,test.data[657:756,1003])
 beta_weights<-adaboost(as.matrix(test.data[1:656,]))
 pred<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
+
+## Time complexity for all three cases
+microbenchmark(
+beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])),
+beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
+beta_weights<-adaboost(as.matrix(test.data[1:656,]))
+)
+
+# Time complexity results 
+Unit: milliseconds
+                                                                 expr         min         lq
+  beta_weights <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
+ beta_weights <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
+              beta_weights <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
+        mean      median          uq         max neval cld
+    2.998985    2.628381    3.268289    8.735227   100  a 
+   13.321431   12.748101   13.803661   21.472355   100  a 
+ 1131.221948 1119.005398 1158.325284 1375.517888   100   b
 }
+
+  
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
