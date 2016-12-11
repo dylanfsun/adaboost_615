@@ -40,7 +40,7 @@ Returns an object of class "adamodel" that can be used for prediction.
 Dylan Sun and Nina Zhou
 }
 \note{
-%%  ~~further notes~~
+Our dataset came from the Ta
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -49,14 +49,22 @@ Dylan Sun and Nina Zhou
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-library(adaboost_615)
-library(data.table)
-train <- read.csv('http://math.ucdenver.edu/RTutorial/titanic.txt',sep='\t')
-train <- data.table(train)
-train[, commas := ","]
-train[, Sex := as.character(Sex)]
-train[Sex == "female", Sex := "0"]
-train[Sex == "male", Sex := "1"]
+## Example with two main predictors 
+# with first 656 rows as the training dataset and last 100 
+# as the test dataset  
+beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)]))  
+pred<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights)
+errorRate(pred,test.data[657:756,1003])
+
+## Adding 500 columns of noise  
+beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:502,1003)]))
+pred<-predictAda615(as.matrix(test.data[657:756,1:502]),beta_weights)
+errorRate(pred,test.data[657:756,1003])  
+  
+## Adding 1000 clumns of noise
+beta_weights<-adaboost(as.matrix(test.data[1:656,]))
+pred<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights)
+errorRate(pred,test.data[657:756,1003])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
