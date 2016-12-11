@@ -34,7 +34,26 @@ Dylan Sun and Nina Zhou
 The support function errorRate can be then used to calculate test error, or test error can be calculated manually.
 }
 \examples{
+## Time complexity for all three cases
+microbenchmark(
+pred1<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights1),
+pred2<-predictAda615(as.matrix(test.data[657:756,1:11]),beta_weights2),
+pred3<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights3)
+)
+
+#Results
+Unit: microseconds
+                                                                       expr       min         lq
+   pred1 <- predictAda615(as.matrix(test.data[657:756, 1:2]), beta_weights1)   172.731   190.2745
+  pred2 <- predictAda615(as.matrix(test.data[657:756, 1:11]), beta_weights2)   314.540   347.1540
+ pred3 <- predictAda615(as.matrix(test.data[657:756, -1003]), beta_weights3) 16892.515 18488.6240
+       mean     median         uq       max neval cld
+   299.6531   271.0825   358.2105   999.393   100  a 
+   543.6753   468.4010   644.3980  1907.540   100  a 
+ 22545.6946 20089.5670 24562.7120 61370.046   100   b  
+  
 See ?adaboost for a full example, including the predicted function and errorRate function.
+  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
