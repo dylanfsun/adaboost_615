@@ -4,8 +4,7 @@ Title:
 Version: 0.1.0
 Author: Dylan Sun and Nina ZHou
 Maintainer: Nina Zhou <zhounina@umich.edu>
-Description: Contains adaboost implementation for biostat615 project 
-for group Dylan Sun and Nina Zhou
+Description: Contains adaboost implementation for biostat615 project for group Dylan Sun and Nina Zhou
 License: None
 Encoding: UTF-8
 LazyData: true
