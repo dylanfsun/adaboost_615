@@ -1,62 +1,40 @@
-\name{adaboost_615}
-\alias{adaboost_615}
+\name{predictAda615}
+\alias{predictAda615}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Adaboost with logistic regression as the weak classifier
+Predict outcome labels using adaboost results.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-This function reads in a dataframe of data, and creates an object of class "adamodel" that can be used for prediction.
+This function accepts new test data and the output from adaboost, and uses them to generate predicted outcome labels.
 }
 \usage{
-adaboost_615(data, dependent_index = dim(data)[2])
+predictAda615(test.data, beta.weights)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{
-  A data frame containing all relevant predictors and the class labels. The class labels should be binary 0 and 1.
+  \item{test.data}{
+  A matrix containing the test data. The matrix should not include the outcome label column, and should therefore have one less column than the training matrix. The covariates should all otherwise be in the same order as in the training matrix.
   }
-  \item{dependent_index}{
-  An optional integer indicating which column of the data dataframe contains the class labels. By default, adaboost_615 will assume that the last column holds the class labels.
+  \item{beta.weights}{
+  A matrix containing the output from the adaboost function.
   }
-
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Using the coefficients from each iteration of logistic regression, this function generates probabilities with the equation prob = 1/(1 + exp(-1*(train_results(j,0) + train_results(j,1)*test(i,j)))). It then uses 0.5 as the breakpoint for assigning labels.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-Returns an object of class "adamodel" that can be used for prediction.
-}
-\references{
-%% ~put references to the literature/web site here ~
+Returns a vector containing the predict outcome labels. The vector will be the same length as the number of rows in the input matrix.
 }
 \author{
 Dylan Sun and Nina Zhou
 }
 \note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+The support function errorRate can be then used to calculate test error, or test error can be calculated manually.
 }
 \examples{
-library(adaboost_615)
-library(data.table)
-train <- read.csv('http://math.ucdenver.edu/RTutorial/titanic.txt',sep='\t')
-train <- data.table(train)
-train[, commas := ","]
-train[, Sex := as.character(Sex)]
-train[Sex == "female", Sex := "0"]
-train[Sex == "male", Sex := "1"]
+See ?adaboost for a full example, including the predicted function and errorRate function.
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
