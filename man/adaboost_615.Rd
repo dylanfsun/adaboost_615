@@ -37,11 +37,12 @@ Returns an object of class "adamodel" that can be used for prediction.
 Dylan Sun and Nina Zhou
 }
 \note{
-The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. 
+The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. See ?test.data for more details. 
 With the two main predictor age and sex, Adaboost function can correctly classify 0.68 of the survival cases. 
 Our Adaboost function is robust to some noisy data, we first added 9 columns of random numbers to the data and the prediction accuracy remains the same. 
+Note that for fairly small amount of noise, the oder of the variable does not matter. If we add the noise columns in the first 9 columns, the model prediction is not affected.
 We can see from the variable weights that age and sex weighted much higher than others. The ability of handle noise is diminishing with increasing amount of noisy data. 
-When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%.    See ?test.data for more details.
+When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%.    
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
