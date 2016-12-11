@@ -1,6 +1,7 @@
 \name{adaboost}
 \alias{adaboost}
 \alias{adaboost615}
+\alias{adaboost_615}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
@@ -8,7 +9,7 @@ Adaboost with logistic regression as the weak classifier
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-This function accepts a matrix of data, and outputs a matrix of coefficients and weights.
+This function accepts a matrix of data, and outputs a matrix of coefficients and weights that result from the adaboost algorithm.
 }
 \usage{
 adaboost(data)
@@ -28,21 +29,26 @@ adaboost(data)
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-Returns an object of class "adamodel" that can be used for prediction.
+A matrix of coefficients and weights that result from the adaboost algorithm.
+
+Each row of the outcome matrix represents a weak classifier run, e.g. if there are 1002 covariates, adaboost will run 1002 logistic regressions, and there will be 1002 rows in the output matrix. The first column contains the intercept coefficients; the second column contains the predictor coefficients; and the last column contains the weight of each weak classifier.
 }
 \references{
 %% ~put references to the literature/web site here ~
+Soft Margins for Adaboost:
+
+http://link.springer.com/article/10.1023/A:1007618119488
 }
 \author{
 Dylan Sun and Nina Zhou
 }
 \note{
-The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. See ?test.data for more details. 
-With the two main predictor age and sex, Adaboost function can correctly classify 0.68 of the survival cases. 
-Our Adaboost function is robust to some noisy data, we first added 9 columns of random numbers to the data and the prediction accuracy remains the same. 
+The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. See ?test.data for more details.
+With the two main predictor age and sex, Adaboost function can correctly classify 0.68 of the survival cases.
+Our Adaboost function is robust to some noisy data, we first added 9 columns of random numbers to the data and the prediction accuracy remains the same.
 Note that for fairly small amount of noise, the oder of the variable does not matter. If we add the noise columns in the first 9 columns, the model prediction is not affected.
-We can see from the variable weights that age and sex weighted much higher than others. The ability of handle noise is diminishing with increasing amount of noisy data. 
-When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%.    
+We can see from the variable weights that age and sex weighted much higher than others. The ability of handle noise is diminishing with increasing amount of noisy data.
+When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -77,19 +83,19 @@ beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
 beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 )
 
-# Time complexity results 
+# Time complexity results
 Unit: milliseconds
                                                                  expr         min         lq
   beta_weights1 <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
  beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
               beta_weights3 <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
         mean      median          uq         max neval cld
-    2.998985    2.628381    3.268289    8.735227   100  a 
-   13.321431   12.748101   13.803661   21.472355   100  a 
+    2.998985    2.628381    3.268289    8.735227   100  a
+   13.321431   12.748101   13.803661   21.472355   100  a
  1131.221948 1119.005398 1158.325284 1375.517888   100   b
 }
 
-  
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
