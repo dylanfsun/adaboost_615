@@ -21,7 +21,20 @@ adaboost(data)
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+See the below Examples section for full R code, without text samples. This section details the results of testing from the Examples code.
+
+The first two columns of the test data, Age and Sex, and the outcome variable, Survival, were subsetted from the Titanic dataset. See \code{\link{test.data}} for more details on the original dataset.
+\code{data(test.data)}
+
+Using the two main predictors age and sex, the adaboost function can correctly classify 0.68 of the survival cases.
+
+We then tested our adaboost function by adding in several columns of randomly generated noise, starting from 9 extra columns up to 1000 extra columns. Adding 9 columns of random numbers to the data resulted in the same prediction accuracy.
+
+Note that for a fairly small amount of noise columns, the order of the variables does not appear to matter, despite adaboost looping through the dataset in order. When tested on 9 covariates, the model prediction rate remains the same whether the two true predictors, Age and Sex, are placed before or after the randomly generated noise variables.
+
+We can see from the previous example with 9 predictors that age and sex are weighted much more highly than the random noise variables. This ability to handle random noise covariates diminishes as more noisy data is added. When we added 1000 columns of random numbers to the data, the model increased its prediction accuracy, but did so just by predicting all test cases to be dead. In this case, the model has an error rate of 24 percent.
+
+For speed, according to microbenchmark, the adaboost function is faster than logistic function in R when fitting two covariates. See the example for details. The glm function in R failed to coverge when fit on the dataset with 1002 predictors and could not be compared.
 }
 \value{
 %%  ~Describe the value returned
@@ -43,22 +56,24 @@ http://link.springer.com/article/10.1023/A:1007618119488
 Dylan Sun and Nina Zhou
 }
 \note{
-The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. See ?test.data for more details.
-With the two main predictor age and sex, Adaboost function can correctly classify 0.68 of the survival cases.
-Our Adaboost function is robust to some noisy data, we first added 9 columns of random numbers to the data and the prediction accuracy remains the same.
-Note that for a fairly small amount of noise, the order of the variable does not matter. If we add the noise columns in the first 9 columns, the model prediction is not affected.
-We can see from the variable weights that age and sex weighted much higher than others. The ability of handle noise is diminishing with increasing amount of noisy data.
-When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%. According to microbenchmark, the adaboost function is faster than logistic function in R when fitting two covariates. See the example for details.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
+See documentation for our supporting functions:
+
+\code{
+\link{univLogReg}
+\link{predictAda615}
+\link{errorRate}
+\link{test.data}
+}
 }
 \examples{
 # Load in the data
-data(test.data)
+data(test.data) # see ?test.data
 
 ## Example with two main predictors
 # with first 656 rows as the training dataset and last 100 as the test dataset
@@ -76,7 +91,7 @@ beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 pred3<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights3)
 errorRate(pred3,test.data[657:756,1003])
 
-## Time complexity for all three cases 
+## Time complexity for all three cases
 microbenchmark(
 beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])),
 beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
@@ -101,11 +116,11 @@ r.log<-glm(Survival~Age+Sex,family = binomial(link = "logit"),data = test.data)
 )
 
 #Unit: milliseconds
-#                                                                                        
-#r.log <- glm(Survival ~ Age + Sex, family = binomial(link = "logit"),      
+#
+#r.log <- glm(Survival ~ Age + Sex, family = binomial(link = "logit"),
 #expr                   min       lq     mean   median       uq      max neval
-#data = test.data) 3.418167 3.960986 4.440878 4.241264 4.941011 6.826317   100 
-  
+#data = test.data) 3.418167 3.960986 4.440878 4.241264 4.941011 6.826317   100
+
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
