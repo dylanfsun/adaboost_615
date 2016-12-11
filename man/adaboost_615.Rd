@@ -59,9 +59,9 @@ beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)]))
 pred<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
 
-## After adding 500 columns of noise
-beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:502,1003)]))
-pred<-predictAda615(as.matrix(test.data[657:756,1:502]),beta_weights)
+## After adding 9 columns of noise
+beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)]))
+pred<-predictAda615(as.matrix(test.data[657:756,1:11]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
 
 ## Adding 1000 clumns of noise
