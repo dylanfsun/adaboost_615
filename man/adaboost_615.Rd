@@ -56,17 +56,17 @@ data(test.data)
 ## Example with two main predictors
 # with first 656 rows as the training dataset and last 100 as the test dataset
 beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)]))
-pred1<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights)
+pred1<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights1)
 errorRate(pred1,test.data[657:756,1003])
 
 ## After adding 9 columns of noise
 beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)]))
-pred2<-predictAda615(as.matrix(test.data[657:756,1:11]),beta_weights)
+pred2<-predictAda615(as.matrix(test.data[657:756,1:11]),beta_weights2)
 errorRate(pred2,test.data[657:756,1003])
 
 ## Adding 1000 clumns of noise
 beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
-pred3<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights)
+pred3<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights3)
 errorRate(pred3,test.data[657:756,1003])
 
 ## Time complexity for all three cases
