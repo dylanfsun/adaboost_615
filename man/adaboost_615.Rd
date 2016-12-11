@@ -55,33 +55,33 @@ data(test.data)
 
 ## Example with two main predictors
 # with first 656 rows as the training dataset and last 100 as the test dataset
-beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)]))
+beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)]))
 pred<-predictAda615(as.matrix(test.data[657:756,1:2]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
 
 ## After adding 9 columns of noise
-beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)]))
+beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)]))
 pred<-predictAda615(as.matrix(test.data[657:756,1:11]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
 
 ## Adding 1000 clumns of noise
-beta_weights<-adaboost(as.matrix(test.data[1:656,]))
+beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 pred<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights)
 errorRate(pred,test.data[657:756,1003])
 
 ## Time complexity for all three cases
 microbenchmark(
-beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])),
-beta_weights<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
-beta_weights<-adaboost(as.matrix(test.data[1:656,]))
+beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])),
+beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
+beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 )
 
 # Time complexity results 
 Unit: milliseconds
                                                                  expr         min         lq
-  beta_weights <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
- beta_weights <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
-              beta_weights <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
+  beta_weights1 <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
+ beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
+              beta_weights3 <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
         mean      median          uq         max neval cld
     2.998985    2.628381    3.268289    8.735227   100  a 
    13.321431   12.748101   13.803661   21.472355   100  a 
