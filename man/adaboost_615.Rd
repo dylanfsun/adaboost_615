@@ -46,9 +46,9 @@ Dylan Sun and Nina Zhou
 The first two columns of the test data-age and sex and the outcome variable survival were subsetted from the Titanic dataset. See ?test.data for more details.
 With the two main predictor age and sex, Adaboost function can correctly classify 0.68 of the survival cases.
 Our Adaboost function is robust to some noisy data, we first added 9 columns of random numbers to the data and the prediction accuracy remains the same.
-Note that for fairly small amount of noise, the oder of the variable does not matter. If we add the noise columns in the first 9 columns, the model prediction is not affected.
+Note that for a fairly small amount of noise, the order of the variable does not matter. If we add the noise columns in the first 9 columns, the model prediction is not affected.
 We can see from the variable weights that age and sex weighted much higher than others. The ability of handle noise is diminishing with increasing amount of noisy data.
-When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%.
+When we add 1000 columns of random numbers the model predicts all test cases to be dead. In this case, the model has an error rate of 24%. According to microbenchmark, the adaboost function is faster than logistic function in R when fitting two covariates. See the example for details.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -76,25 +76,36 @@ beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 pred3<-predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights3)
 errorRate(pred3,test.data[657:756,1003])
 
-## Time complexity for all three cases
+## Time complexity for all three cases 
 microbenchmark(
 beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])),
 beta_weights2<-adaboost(as.matrix(test.data[1:656,c(1:11,1003)])),
 beta_weights3<-adaboost(as.matrix(test.data[1:656,]))
 )
 
-# Time complexity results
-Unit: milliseconds
-                                                                 expr         min         lq
-  beta_weights1 <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
- beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
-              beta_weights3 <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
-        mean      median          uq         max neval cld
-    2.998985    2.628381    3.268289    8.735227   100  a
-   13.321431   12.748101   13.803661   21.472355   100  a
- 1131.221948 1119.005398 1158.325284 1375.517888   100   b
+## Time complexity results
+#Unit: milliseconds
+#                                                                 expr         min         lq
+#  beta_weights1 <- adaboost(as.matrix(test.data[1:656, c(1:2, 1003)]))    2.344701    2.48756
+# beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11, 1003)]))   11.339446   12.12715
+#              beta_weights3 <- adaboost(as.matrix(test.data[1:656, ])) 1040.429919 1095.18169
+#        mean      median          uq         max neval cld
+#    2.998985    2.628381    3.268289    8.735227   100  a
+#   13.321431   12.748101   13.803661   21.472355   100  a
+# 1131.221948 1119.005398 1158.325284 1375.517888   100   b
 }
 
+# Compare with logistic regression in R
+microbenchmark(
+r.log<-glm(Survival~Age+Sex,family = binomial(link = "logit"),data = test.data)
+)
+
+#Unit: milliseconds
+#                                                                                        
+#r.log <- glm(Survival ~ Age + Sex, family = binomial(link = "logit"),      
+#expr                   min       lq     mean   median       uq      max neval
+#data = test.data) 3.418167 3.960986 4.440878 4.241264 4.941011 6.826317   100 
+  
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
