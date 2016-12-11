@@ -243,12 +243,12 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
     double training_error = 0;
     bool incorrect = false;
     double delta = 0.5; // This is a given number that terminates loop if the training error is too large
-    
+
     for (int i = 1; i < l; i++) {
       incorrect = (hypothesis[i] != data(i, T) );
       training_error += weights[i]*incorrect;
     }
-    
+
     // Check what happens if training error >= 0.5"
     NumericMatrix bad_training_error;
     if (training_error >= delta) {
@@ -262,7 +262,7 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
       }
       training_error = 1 - training_error;
     }
-      
+
     // set b_t
     double b_t = log( (1-training_error)/training_error );
     all_bt.push_back(b_t);
@@ -317,7 +317,6 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
     results(i,1) = all_betas[i][1];
     results(i,2) = all_bt[i];
   }
-
   return results;
 }
 
