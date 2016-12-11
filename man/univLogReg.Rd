@@ -35,25 +35,10 @@ Dylan Sun and Nina Zhou
 This function can only handle one covariate at a time; if you want to use a factor predictor with more than two levels, you will have to manually create dummy columns.
 }
 \examples{
-library(adaboost615)
-library(data.table)
-library(microbenchmark)
-train <- read.csv('http://math.ucdenver.edu/RTutorial/titanic.txt',sep='\t')
-train <- data.table(train)
-train[, Name := NULL]
-train[, PClass := NULL]
-train <- train[complete.cases(train)]
-train[, Sex := as.character(Sex)]
-train[Sex == "female", Sex := "0"]
-train[Sex == "male", Sex := "1"]
-train[, Sex := as.numeric(Sex)]
-train[, Age := as.numeric(Age)]
-train[, Survived := as.numeric(Survived)]
-train.matrix <- as.matrix(train)
-
-initial.weights <- rep(1/dim(train.matrix)[1], dim(train.matrix)[1])
-betas <- univLogReg(initial.weights, train.matrix, 0) # 0 is the first column index
-betas <- univLogReg(initial.weights, train.matrix, 1) # 1 is the second column index
+data(test.data)
+initial.weights <- rep(1/dim(test.data)[1], dim(test.data)[1])
+betas <- univLogReg(initial.weights, as.matrix(test.data), 0) # 0 is the first column index
+betas <- univLogReg(initial.weights, as.matrix(test.data), 1) # 1 is the second column index
 microbenchmark(univLogReg(initial.weights, train.matrix, 0))
 microbenchmark(univLogReg(initial.weights, train.matrix, 1))
 }

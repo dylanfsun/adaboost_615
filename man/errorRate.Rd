@@ -10,28 +10,22 @@ Compares two columns and returns the error rate.
 This is a simple function used to calculate error rate. It compare two columns and returns the percentage of entries that are not equal in the both of them.
 }
 \usage{
-predictAda615(test.data, beta.weights)
+errorRate(predicted, labels)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{test.data}{
-  A matrix containing the test data. The matrix should not include the outcome label column, and should therefore have one less column than the training matrix. The covariates should all otherwise be in the same order as in the training matrix.
+  \item{predicted}{
+  Column of predicted labels.
   }
-  \item{beta.weights}{
-  A matrix containing the output from the adaboost function.
+  \item{labels}{
+  Column of actual labels. Must be the same length as the predicted column.
   }
-}
-\details{
-Using the coefficients from each iteration of logistic regression, this function generates probabilities with the equation prob = 1/(1 + exp(-1*(train_results(j,0) + train_results(j,1)*test(i,j)))). It then uses 0.5 as the breakpoint for assigning labels.
 }
 \value{
-Returns a vector containing the predict outcome labels. The vector will be the same length as the number of rows in the input matrix.
+Returns a double representing the error rate, or proportion of entries that are inequal in the two columns.
 }
 \author{
 Dylan Sun and Nina Zhou
-}
-\note{
-The support function errorRate can be then used to calculate test error, or test error can be calculated manually.
 }
 \examples{
 See ?adaboost for a full example, including the predicted function and errorRate function.
