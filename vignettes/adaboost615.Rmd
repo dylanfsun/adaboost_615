@@ -1,0 +1,131 @@
+---
+title: "adaboost615"
+author: "Dylan Sun and Nina Zhou"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{adaboost615}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+For our project, we have implemented a specific case of ADABOOST, an ensemble classification alogorithm. The paper we followed is: `RATSCH, G. “Soft Margins for AdaBoost.” Machine Learning, 42, 287–320, 2001.` Our function takes in a binary outcome variable and any number of continuous predictors (categorical variables must be binary or ordinal).
+
+Specifically, we implemented a simplified, heavily modified version of the algorithm that uses weighted univariate logistic regression as the weak classifier. The algorithm loops once for each predictor, recalculating the weak classifier while emphasizing data points that were misclassified in the previous iteration. 
+
+A description of the algorithm is as follows:
+
+1. Input the training data and choose initial weights for each data pair; for initializing, just weight each data pair the same (must add to 1)
+2. Train the weak classifier with respect to the weighted sample set and obtain hypothesis classifications; in our case, we run univariate logistic regression on a single column and save the fitted beta values.
+3. Calculate the training error. 
+4. Update the weights for each data pair, using the log odds of the training error. If the original pair was classified incorrectly, its weight goes up; if the pair was classified correctly, the weight goes down. 
+5. Based on the training error, save the overall weight of this weak classifier. Weak classifiers that have poor training errors will have lower weights.
+6. Repeat until there are no more predictors. 
+7. The saved betas and weights can be used for prediction. 
+
+## Installation Instructions
+Our package can be downloaded directly from our [github repository](https://github.com/dylanfsun/adaboost_615) within R.
+
+Instructions:
+
+1. install.packages("devtools")
+2. library(devtools)
+3. install_github(repo = "dylanfsun/adaboost_615", build_vignettes = T) 
+4. library(adaboost615)
+5. ?adaboost615
+6. ?test.data
+7. ?univLogReg
+8. ?predictAda615
+9. ?errorRate
+
+
+## Loading in the test data
+Our test data is based on the publicly available [Titanic dataset](http://math.ucdenver.edu/RTutorial/titanic.txt). 
+
+The first two columns of the test data, Age and Sex, and the outcome variable, Survival, were directly subsetted from the Titanic dataset. See `?test.data` for more details on the original dataset and how to download it. 
+```{r}
+library(adaboost615)
+data(test.data) # see ?test.data
+```
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(test.data[1:656, c(1:11,1003)], 10))
+```
+
+
+## Example 1: two main predictors
+This example uses the first 656 rows as the training dataset and the last 100 as the test dataset. It builds the model using only two preidctors: Sex and Age, the two continuous predictors originally included with the dataset.
+
+### Error rate
+```{r}
+beta_weights1 <- adaboost(as.matrix(test.data[1:656, c(1:2,1003)]))
+pred1 <- predictAda615(as.matrix(test.data[657:756,1:2]), beta_weights1)
+errorRate(pred1, test.data[657:756,1003])
+```
+Using these two predictors, our error rate on the test dataset is 0.32. This is the same error rate produced by fitting a logistic regression model using the glm package in R with both covariates.
+```{r}
+logmodel <- glm(Survival ~ Age + Sex, data = test.data[1:656, c(1:2,1003)], family = binomial(link = "logit"))
+pred1 <- predict(logmodel, test.data[657:756,1:2], type = "response") >= 0.5
+errorRate(pred1, test.data[657:756, 1003])
+```
+### Benchmarking
+```{r}
+library(microbenchmark)
+microbenchmark(beta_weights1<-adaboost(as.matrix(test.data[1:656,c(1:2,1003)])), 
+               logmodel <- glm(Survival ~ Age + Sex, data = test.data[1:656, c(1:2,1003)], family = binomial(link = "logit"))
+  )
+```
+Based on microbenchmark with 100 evaluations, our adaboost function model-fitting step runs faster than the R glm function when only using these two predictors, while retaining the same error rate.  
+
+## Example 2: Two main predictors with nine columns of random noise
+In this example, nine columns of randomly generated noise are added to the model. These columns were pre-generated and have already been included in the test.data dataset.
+
+### Error rate
+```{r}
+## After adding 9 columns of noise
+beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11,1003)]))
+pred2 <- predictAda615(as.matrix(test.data[657:756,1:11]), beta_weights2)
+errorRate(pred2, test.data[657:756,1003])
+```
+```{r}
+logmodel <- glm(Survival ~ ., data = test.data[1:656, c(1:11,1003)], family = binomial(link = "logit"))
+pred2 <- predict(logmodel, test.data[657:756,1:11], type = "response") >= 0.5
+errorRate(pred2, test.data[657:756, 1003])
+```
+### Benchmarking
+```{r}
+microbenchmark(beta_weights2 <- adaboost(as.matrix(test.data[1:656, c(1:11,1003)])),
+               logmodel <- glm(Survival ~ ., data = test.data[1:656, c(1:11,1003)], family = binomial(link = "logit"))
+  )
+```
+On 11 predictors, the error rate is still the same for both functions. The adaboost function is slower since it fits a separate logistic regression for each predictor, while glm is fitting only once. 
+
+## Example 3: Two main predictors with 1000 columns of random noise
+Similar to example 2, the model is rerun, but now with 1000 columns of random noise added to the dataset, rather than just 9. 
+
+### Error rate
+```{r}
+## Adding 1000 columns of noise
+beta_weights3 <- adaboost(as.matrix(test.data[1:656,]))
+pred3 <- predictAda615(as.matrix(test.data[657:756,-1003]),beta_weights3)
+errorRate(pred3,test.data[657:756,1003])
+```
+```{r, warning=FALSE}
+logmodel <- glm(Survival ~ ., data = test.data[1:656,], family = binomial(link = "logit"))
+pred3 <- predict(logmodel, test.data[657:756,], type = "response") >= 0.5
+errorRate(pred3, test.data[657:756, 1003])
+```
+### Benchmarking
+```{r, warning=FALSE}
+microbenchmark(beta_weights3 <- adaboost(as.matrix(test.data[1:656,])),
+               logmodel <- glm(Survival ~ ., data = test.data[1:656,], family = binomial(link = "logit")), 
+               times = 2
+  )
+```
+With 1002 predictors, the glm function fails to converge and is extremely slow. The adaboost function decreases in test error after incorporating the random noise. Note that 0.24 is the proportion of survivors in the dataset overall. 
+
+
+

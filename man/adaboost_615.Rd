@@ -21,7 +21,7 @@ adaboost(data)
   }
 }
 \details{
-See the below Examples section for full R code, without text samples. This section details the results of testing from the Examples code.
+See the below Examples section for full R code, without text samples. This section details the results of testing from the Examples code. Alternatively, see the vignette
 
 The first two columns of the test data, Age and Sex, and the outcome variable, Survival, were subsetted from the Titanic dataset. See \code{\link{test.data}} for more details on the original dataset.
 \code{data(test.data)}
