@@ -11,8 +11,8 @@ Test data for usage in adaboost package for Biostat 615 project.
 \format{
   A data frame with 756 observations on the following 1003 variables.
   \describe{
-    \item{\code{Age}}{a numeric vector}
-    \item{\code{Sex}}{a binary numeric vector}
+    \item{\code{Age}}{a numeric vector containing the age of the passenger}
+    \item{\code{Sex}}{a binary numeric vector, containing 0 for female and 1 for male}
     \item{\samp{1, ..., 1000}}{Numeric vectors containing randomly generated data for testing purposes.}
     \item{\code{Survival}}{a binary numeric vector containing the outcome labels.}
   }
