@@ -249,10 +249,8 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
       training_error += weights[i]*incorrect;
     }
 
-    // Check what happens if training error >= 0.5"
-    NumericMatrix bad_training_error;
-    if (training_error >= delta) {
-      // std::cout << "training error >= 0.5" << std::endl;
+    // Worst training error = 0.5"
+     if (training_error >= delta) {
       for(int i = 0; i < hypothesis.size(); i++) {
         if (hypothesis[i] == false) {
           hypothesis[i] = true;
