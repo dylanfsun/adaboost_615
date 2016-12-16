@@ -199,7 +199,7 @@ std::vector<double> univLogReg(std::vector<double> weights, Eigen::Map<Eigen::Ma
   for (int i = 0; i < data.rows(); i++) {
     prob = 1/(1 + exp(-1*(beta[0] + beta[1]*data(i, column))));
     hypothesis.push_back(prob >= 0.5);
-  } */
+  } */ // deprecated
 
   return beta;
 }
@@ -222,7 +222,7 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
   std::vector<double> all_bt;
   double sum_bt = 0;
 
-  // initialize object to store hypothesis; consider using a matrix or anything less stupid than this
+  // initialize object to store hypothesis
   std::vector< std::vector<bool> > all_hypothesis;
   // initialize object to store betas
   std::vector< std::vector<double> > all_betas;
@@ -250,13 +250,9 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
     }
 
     // Worst training error = 0.5"
-     if (training_error >= delta) {
+    if (training_error >= delta) {
       for(int i = 0; i < hypothesis.size(); i++) {
-        if (hypothesis[i] == false) {
-          hypothesis[i] = true;
-        } else {
-          hypothesis[i] = false;
-        }
+        hypothesis[i] = (hypothesis[i] == false? true:false);
       }
       training_error = 1 - training_error;
     }
@@ -274,21 +270,21 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
       weights[i] = weights[i]*exp(-1*b_t*correct);
       sum_weights += weights[i];
     }
-    // scale the weights; we are looping through again which might be slow? consider using "transform" function instead
+    // scale the weights by their sum
     for (int i = 0; i < l; i++) {
       weights[i] = weights[i]/sum_weights;
     }
   }
 
   // create vector c_ts and calculate final labels; store c_ts in the all_bt vector
-  std::vector<double> labels;
+  // std::vector<double> labels;
 
   for (int i = 0; i < all_bt.size(); i++) {
     all_bt[i] = all_bt[i]/sum_bt;
   }
 
   // calculate final probabilities and assign labels
-  double sum = 0;
+  /* double sum = 0;
   std::vector<bool> f_x; // this stores the final labels
   for (int i = 0; i <= l; i++) {
     sum = 0;
@@ -296,8 +292,7 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
       sum += all_bt[t]*all_hypothesis[t][i];
     }
     f_x.push_back(sum >= 0.5);
-  }
-  // Note: what exactly should we be outputting?
+  } */
   // Once we hook this up to R, we should be outputting a trained classifier that can then
   // be used for predicted; e.g. we should be outputting the betas from the logistic regression
   // and all_bt (which is c_t)
@@ -307,9 +302,8 @@ NumericMatrix adaboost(Eigen::Map<Eigen::MatrixXd> &data) {
   // Note that this means that our univLogReg function should probably be returning the beta's, not the
   // explicit hypotheses.
 
-  // initialize object to store betas and c_t's
+  // initialize object to store betas and c_t's ()which are now in all_bt)
   NumericMatrix results(T,3);
-  // std::cout << "Please God" << std::endl << "T: " << T << std::endl;
   for (int i = 0; i < T; i++) {
     results(i,0) = all_betas[i][0];
     results(i,1) = all_betas[i][1];
